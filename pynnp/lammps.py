@@ -1,6 +1,7 @@
 """LAMMPS"""
 
 from .runner import RunnerAdaptor
+from .dataset import Sample
 from .dataset import AtomicData, CollectiveData
 from .unit import UnitConversion
 
@@ -14,14 +15,12 @@ class RuNNerAdaptorForLAMMPS(RunnerAdaptor):
         RunnerAdaptor.__init__(self)
 
     def read_lammps(self, filename, symbol_dict=None, uc=UnitConversion()):
-
-        with open(filename, 'r') as in_file:
+        """This method reads LAMMPS atomic dump (id x y z type q pot fx fy fz)."""
+        with open(str(filename), 'r') as in_file:
             # loop over lines in file
             for line in in_file:
-
                 # create a instance of sample data
                 sample = Sample()
-
                 # number of steps
                 line = next(in_file)
                 steps = int(line.split()[0])
@@ -40,7 +39,6 @@ class RuNNerAdaptorForLAMMPS(RunnerAdaptor):
                         cell.append((float(line[1]) - float(line[0]))*uc.length)
                     else:
                         cell.append(0.0)
-
                 # read atomic positions, symbol, charge, forces, energy, etc.
                 line = next(in_file)
                 for n in range(number_of_atoms):
@@ -54,16 +52,13 @@ class RuNNerAdaptorForLAMMPS(RunnerAdaptor):
                     # convert number to an atomic symbol
                     if symbol_dict is not None:
                         symbol = symbol_dict[symbol]
-
                     # create atomic data and append it to sample
                     sample.atomic.append(AtomicData(atomid, position, symbol, charge, energy, force))
-
                 # set collective data
-                sample.collective = CollectiveData(cell, sample.total_energy, sample.total_charge)
-
+                sample.collective = CollectiveData(cell, sample.sum_atomic_energy(), sample.sum_atomic_charge())
                 # add sample to DataSet (list of samples)
                 self.dataset.append(sample)
-
+        # return object
         return self
 
     def write_lammps(self, filename, uc=UnitConversion()):
