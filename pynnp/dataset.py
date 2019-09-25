@@ -9,7 +9,7 @@ class AtomicData:
     def __init__(self, atomid=0, position=(0.0, 0.0, 0.0), symbol='X', charge=0.0, energy=0.0, force=(0.0, 0.0, 0.0)):
         self.atomid = atomid
         self.position= position
-        self.symbol = symbol
+        self.symbol = symbol # element type
         self.charge = charge
         self.energy = energy
         self.force = force
@@ -32,28 +32,52 @@ class Sample:
     """ A class that holds a list of atomic data and also collective data for a single sample."""
 
     def __init__(self):
-        self.atomic = []
+        self.atomic = []  # list of atomic data
         self.collective = None
 
-    @property
-    def number_of_atoms(self):
+    def get_number_of_atoms(self):
         return len(self.atomic)
 
     @property
+    def number_of_atoms(self):
+        return self.get_atoms_for_symbol()
+
+    def get_total_energy(self):
+        """This method returns total energy from the collective part of data set."""
+        assert self.collective is None, "No total energy as collective data was found"
+        return self.collective.total_energy
+
+    @property
     def total_energy(self):
+        """This method returns total energy from the collective part of data set."""
+        return self.get_total_energy()
+
+    def sum_atomic_energy(self):
+        """This method calculates total energy by summing up the atomic energy."""
         tot = 0.0
         for atom in self.atomic:
             tot += atom.energy
         return tot
 
+    def get_total_charge(self):
+        """This method returns total charge from the collective part of data set."""
+        assert self.collective is None, "No total charge as collective data was found"
+        return self.collective.total_charge
+
     @property
     def total_charge(self):
+        """This method returns total charge from the collective part of data set."""
+        return self.get_total_energy()
+
+    def sum_atomic_charge(self):
+        """This method calculates total charge by summing up atomic charge."""
         tot = 0.0
         for atom in self.atomic:
             tot += atom.charge
         return tot
 
     def get_atoms_for_symbol(self, symbol):
+        """This methods return a list of atoms with a specified symbol (element type)."""
         sel_atoms = []
         for atom in self.atomic:
             if atom.symbol == symbol:
@@ -61,6 +85,7 @@ class Sample:
         return sel_atoms
 
     def get_number_of_atoms_for_symbol(self, symbol):
+        """This methods return number of atoms with a specified symbol (element type)."""
         return len(self.get_atoms_for_symbol(symbol))
 
 # ----------------------------------------------------------------------------
@@ -70,11 +95,13 @@ class DataSet:
     """This class holds a collection of samples."""
 
     def __init__(self):
-        self.samples = []
+        self.samples = []  # list of samples
 
-    def append(self, sample):
-        """Append a sample to list of samples."""
-        self.samples.append(sample)
+    def append(self, new_sample):
+        """Append a sample to the list of samples."""
+        assert isinstance(new_sample, Sample), "Unexpected sample type"
+        self.samples.append(new_sample)
+        return self
 
     @property
     def number_of_samples(self):
