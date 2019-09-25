@@ -11,15 +11,19 @@ KCALMOL_TO_HARTREE = 0.001593602
 # Define utility constants, functions, and classes
 # ----------------------------------------------------------------------------
 class UnitConversion:
-    """A class for unit conversion of RuNNer package."""
+    """A class for unit conversion regarding file i/o."""
 
-    def __init__(self, energy_conversion=1.0, length_conversion=1.0):
+    def __init__(self, energy_conversion=1.0, length_conversion=1.0, charge_conversion=1.0):
         self.energy = energy_conversion
         self.length = length_conversion
-        self.charge = 1.0
+        self.charge = charge_conversion
         self.force = energy_conversion / length_conversion
+
+    def inverse(self):
+        """A method that returns the inverse of UnitConversion object."""
+        return UnitConversion(1.0 / self.energy, 1.0 / self.length, 1. / self.charge)
 
     @property
     def inverse(self):
-        """A method that applies inverse unit conversion."""
-        return UnitConversion(1.0/self.energy, 1.0/self.length)
+        """A method that returns the inverse of UnitConversion object."""
+        return self.inverse()
