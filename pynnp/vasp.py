@@ -1,4 +1,4 @@
-"""Vasp"""
+"""VASP"""
 
 from .runner import RunnerAdaptor
 from .unit import UnitConversion
@@ -121,3 +121,24 @@ class RuNNerAdaptorForVASP(RunnerAdaptor):
         self.read_poscar(symbol_list=symbol_list, uc=uc)
         self.read_outcar(uc=uc)
         return self
+
+    # def read_nnforces(self, filename, uc=UnitConversion()):
+    #     """A method that reads predicted force for a given structure"""
+    #     nnforces = []
+    #     with open(filename, 'r') as infile:
+    #         for line in infile:
+    #             if "NNforces" in line:
+    #                 line = line.rstrip("/n").split()
+    #                 nnforces.append([float(_)*uc.force for _ in line[2:5]])
+    #     return nnforces
+
+    # def read_nnenergy(self, filename, uc=UnitConversion()):
+    #     """A method that reads predicted force for a given structure"""
+    #     nnenergy = None
+    #     with open(filename, 'r') as infile:
+    #         for line in infile:
+    #             if "NNenergy" in line:
+    #                 line = line.rstrip("/n").split()
+    #                 nnenergy = float(line[1])*uc.energy
+    #                 break
+    #     return nnenergy
