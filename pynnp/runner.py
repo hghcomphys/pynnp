@@ -117,37 +117,10 @@ class RunnerAdaptor:
         self.dataset.samples = [self.dataset.samples[int(index)] for index in list(list_of_indices)]
         return self
 
-
-    # def read_nnforces(self, filename, uc=UnitConversion()):
-    #     """A method that reads predicted force for a given structure"""
-    #     nnforces = []
-    #     with open(filename, 'r') as infile:
-    #         for line in infile:
-    #             if "NNforces" in line:
-    #                 line = line.rstrip("/n").split()
-    #                 nnforces.append([float(_)*uc.force for _ in line[2:5]])
-    #     return nnforces
-
-    # def read_nnenergy(self, filename, uc=UnitConversion()):
-    #     """A method that reads predicted force for a given structure"""
-    #     nnenergy = None
-    #     with open(filename, 'r') as infile:
-    #         for line in infile:
-    #             if "NNenergy" in line:
-    #                 line = line.rstrip("/n").split()
-    #                 nnenergy = float(line[1])*uc.energy
-    #                 break
-    #     return nnenergy
-
-# if __name__ == "__main__":
-    # data = RunnerAdaptor().read_runner(filename="input.data").write_runner(filename="input.2.data")
-    # uc = UnitConversion(energy_conversion=EV_TO_HARTREE, length_conversion=ANGSTROM_TO_BOHR)
-    # RuNNerAdaptorForVASP().read_vasp(symbol_list=['H', 'O'], uc=uc).write_runner(filename='input.vasp.data')
-    # vasp.read_POSCAR(symbol_list=['O', 'H'], uc=uc)
-    # vasp.read_OUTCAR(uc=uc)
-    # uc = UnitConversion(energy_conversion=EV_TO_HARTREE, length_conversion=ANGSTROM_TO_BOHR)
-    # RuNNerAdaptorForVASP().read_runner("input.data").write_poscar(symbol_list=['H', 'O'], uc=uc.inverse, number_of_strucure=1)
-    # ra = RunnerAdaptor();
-    # ra.read_runner("input.data");
-    # ra.select(10, seed=1)
-    # ra.write_runner("input.data.sel")
+    def delete(self, list_of_indices):
+        """This method deletes some samples from data set based on given indices (zero-index-based)."""
+        if isinstance(list_of_indices, int):
+            list_of_indices = [list_of_indices]
+        n_samples = self.dataset.number_of_samples
+        self.dataset.samples = [self.dataset.samples[index] for index in range(n_samples) if index not in list(list_of_indices)]
+        return self
