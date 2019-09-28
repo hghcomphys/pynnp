@@ -99,14 +99,15 @@ class RunnerAdaptor:
         """This method randomly samples and replaces the data set."""
         # set random seed
         random.seed(int(seed))
-        # select samples randomly
+        # set number of samples
         if number_of_samples is None:
-            sel_samples = random.sample(self.dataset.samples, 1)  # default number of sample
+            number_of_samples = 1  # default number of samples (one)
         else:
-            assert int(number_of_samples) <= self.dataset.number_of_samples, "Number of structures exceeds number of samples"
-            sel_samples = random.sample(self.dataset.samples, int(number_of_samples))
-        # replace the data set with new selected samples
-        self.dataset.samples = sel_samples
+            assert int(number_of_samples) <= self.dataset.number_of_samples, "Unexpected number of samples"
+        # shuffle list of indices
+        random.shuffle(self.dataset.samples)
+        # replace the data set with the randomly but uniquely selected samples
+        self.dataset.samples = self.dataset.samples[:int(number_of_samples)]
         # return object
         return self
 
