@@ -40,7 +40,7 @@ class Sample:
 
     @property
     def number_of_atoms(self):
-        return self.get_atoms_for_symbol()
+        return self.get_number_of_atoms()
 
     def get_total_energy(self):
         """This method returns total energy from the collective part of data set."""
