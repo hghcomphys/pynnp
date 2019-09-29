@@ -4,7 +4,6 @@ from .dataset import DataSet, Sample, AtomicData, CollectiveData
 from .unit import UnitConversion, HARTREE_TO_MEV
 from .utils import get_time_and_date
 import random
-import numpy as np
 
 # ----------------------------------------------------------------------------
 # Setup class for RuNNer adaptor
@@ -127,9 +126,34 @@ class RunnerAdaptor:
         self.dataset.samples = [self.dataset.samples[index] for index in range(n_samples) if index not in list(list_of_indices)]
         return self
 
-    def get_range_of_energy(self, energy_conversion=HARTREE_TO_MEV):
-        """This method returns the difference between min and max of the total energy among the samples nomalzied to number of atoms."""
+    def get_range_of_energy(self):
+        """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
         energies = [sample.collective.total_energy/sample.number_of_atoms for sample in self.dataset.samples]
-        return (np.max(energies)-np.min(energies))*energy_conversion
+        return max(energies)-min(energies)
+
+    @property
+    def range_of_energy(self):
+        """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
+        return self.get_range_of_energy()
+
+    def get_range_of_force(self, components=(0, 1, 2)):
+        """This method returns the difference between max and min of the force components among atoms and samples."""
+        if isinstance(components, int):
+            index = [components]
+        else:
+            index = list(components)
+        # find forces
+        forces = []
+        for sample in self.dataset.samples:
+            for atom in sample.atomic:
+                for i in index:
+                    forces.append(atom.force[i])
+        return max(forces) - min(forces)
+
+    @property
+    def range_of_force(self):
+        """This method returns the difference between max and min of the force components among atoms and samples."""
+        return self.get_range_of_force()
+
 
 
