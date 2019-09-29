@@ -1,9 +1,10 @@
 """RuNNer"""
 
 from .dataset import DataSet, Sample, AtomicData, CollectiveData
-from .unit import UnitConversion
+from .unit import UnitConversion, HARTREE_TO_MEV
 from .utils import get_time_and_date
 import random
+import numpy as np
 
 # ----------------------------------------------------------------------------
 # Setup class for RuNNer adaptor
@@ -125,3 +126,10 @@ class RunnerAdaptor:
         n_samples = self.dataset.number_of_samples
         self.dataset.samples = [self.dataset.samples[index] for index in range(n_samples) if index not in list(list_of_indices)]
         return self
+
+    def get_range_of_energy(self, energy_conversion=HARTREE_TO_MEV):
+        """This method returns the difference between min and max of the total energy among the samples nomalzied to number of atoms."""
+        energies = [sample.collective.total_energy/sample.number_of_atoms for sample in self.dataset.samples]
+        return (np.max(energies)-np.min(energies))*energy_conversion
+
+
