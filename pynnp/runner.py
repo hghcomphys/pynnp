@@ -1,7 +1,7 @@
 """RuNNer"""
 
 from .dataset import DataSet, Sample, AtomicData, CollectiveData
-from .unit import UnitConversion, HARTREE_TO_MEV
+from .unit import UnitConversion
 from .utils import get_time_and_date
 import random
 
@@ -126,15 +126,34 @@ class RunnerAdaptor:
         self.dataset.samples = [self.dataset.samples[index] for index in range(n_samples) if index not in list(list_of_indices)]
         return self
 
+    def get_energies(self):
+        """This methods return a list of total energies of samples normalized to number of atoms."""
+        energies = [sample.collective.total_energy / sample.number_of_atoms for sample in self.dataset.samples]
+        return energies
+
+    @property
+    def energies(self):
+        """This methods return a list of total energies of samples normalized to number of atoms."""
+        return self.get_energies()
+
     def get_range_of_energy(self):
         """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
-        energies = [sample.collective.total_energy/sample.number_of_atoms for sample in self.dataset.samples]
+        energies = self.get_energies()
         return max(energies)-min(energies)
 
     @property
     def range_of_energy(self):
         """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
         return self.get_range_of_energy()
+
+    # def get_forces(self):
+    #     forces = []
+    #     for sample in self.dataset.samples:
+    #         sample_forces = []
+    #         for atom in sample.atomic:
+    #             sample_forces.append(atom.force)
+    #         forces.append(sample_forces)
+    #     return forces
 
     def get_range_of_force(self, components=(0, 1, 2)):
         """This method returns the difference between max and min of the force components among atoms and samples."""
@@ -154,6 +173,3 @@ class RunnerAdaptor:
     def range_of_force(self):
         """This method returns the difference between max and min of the force components among atoms and samples."""
         return self.get_range_of_force()
-
-
-
