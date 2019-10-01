@@ -4,6 +4,7 @@ from .dataset import DataSet, Sample, AtomicData, CollectiveData
 from .unit import UnitConversion
 from .utils import get_time_and_date
 import random
+import numpy
 
 # ----------------------------------------------------------------------------
 # Setup class for RuNNer adaptor
@@ -129,7 +130,7 @@ class RunnerAdaptor:
     def get_energies(self):
         """This methods return a list of total energies of samples normalized to number of atoms."""
         energies = [sample.collective.total_energy / sample.number_of_atoms for sample in self.dataset.samples]
-        return energies
+        return numpy.array(energies)
 
     @property
     def energies(self):
@@ -139,35 +140,39 @@ class RunnerAdaptor:
     def get_range_of_energy(self):
         """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
         energies = self.get_energies()
-        return max(energies)-min(energies)
+        return numpy.max(energies)-numpy.min(energies)
 
     @property
     def range_of_energy(self):
         """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
         return self.get_range_of_energy()
 
-    # def get_forces(self):
-    #     forces = []
-    #     for sample in self.dataset.samples:
-    #         sample_forces = []
-    #         for atom in sample.atomic:
-    #             sample_forces.append(atom.force)
-    #         forces.append(sample_forces)
-    #     return forces
+    def get_forces(self, list_of_indices=None, components=(0, 1, 2)):
+        """This method retuns a list of forces for a given list of indices (zero-based) of samples (default is all samples)."""
+        # check input list of indices
+        if list_of_indices is None:
+            samples = self.dataset.samples
+        elif isinstance(list_of_indices, int):
+            samples = [self.dataset.samples[list_of_indices]]
+        else:
+            samples = [self.dataset.samples[index] for index in list(list_of_indices)]
+        # check input components
+        if isinstance(components, int):
+            components = [components]
+        else:
+            components = list(components)
+        # list of forces
+        forces = []
+        for sample in samples:
+            for atom in sample.atomic:
+                forces.append([atom.force[i] for i in components])
+        # return the list of force components for the given samples
+        return numpy.array(forces)
 
     def get_range_of_force(self, components=(0, 1, 2)):
         """This method returns the difference between max and min of the force components among atoms and samples."""
-        if isinstance(components, int):
-            index = [components]
-        else:
-            index = list(components)
-        # find forces
-        forces = []
-        for sample in self.dataset.samples:
-            for atom in sample.atomic:
-                for i in index:
-                    forces.append(atom.force[i])
-        return max(forces) - min(forces)
+        forces = self.get_forces(components)
+        return numpy.max(forces) - numpy.min(forces)
 
     @property
     def range_of_force(self):
