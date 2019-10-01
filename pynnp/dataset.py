@@ -103,6 +103,10 @@ class DataSet:
         self.samples.append(new_sample)
         return self
 
+    def get_number_of_samples(self):
+        return len(self.samples)
+
     @property
     def number_of_samples(self):
-        return len(self.samples)
+        return self.get_number_of_samples()
+
