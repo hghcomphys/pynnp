@@ -178,3 +178,16 @@ class RunnerAdaptor:
     def range_of_force(self):
         """This method returns the difference between max and min of the force components among atoms and samples."""
         return self.get_range_of_force()
+
+    def get_number_of_samples(self):
+        return self.dataset.get_number_of_samples()
+
+    @property
+    def number_of_samples(self):
+        return self.get_number_of_samples()
+
+    def calculate_energy_errors(self, obj):
+        """This method returns a list of absolute-error of total energy for samples (normalized to the number of atoms)."""
+        assert isinstance(obj, RunnerAdaptor), "Unexpected object type"
+        assert self.get_number_of_samples() == obj.get_number_of_samples(), "Unequal number of samples"
+        return numpy.abs(self.get_energies()-obj.get_energies())
