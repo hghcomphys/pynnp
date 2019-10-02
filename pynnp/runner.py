@@ -148,7 +148,7 @@ class RunnerAdaptor:
         return self.get_range_of_energy()
 
     def get_forces(self, list_of_indices=None, components=(0, 1, 2)):
-        """This method retuns a list of forces for a given list of indices (zero-based) of samples (default is all samples)."""
+        """This method returns a list of forces for a given list of indices (zero-based) of samples (default is all samples)."""
         # check input list of indices
         if list_of_indices is None:
             samples = self.dataset.samples
@@ -168,6 +168,11 @@ class RunnerAdaptor:
                 forces.append([atom.force[i] for i in components])
         # return the list of force components for the given samples
         return np.array(forces)
+
+    @property
+    def forces(self):
+        """This method returns a list of forces for all the samples and components."""
+        return self.get_forces()
 
     def get_range_of_force(self, components=(0, 1, 2)):
         """This method returns the difference between max and min of the force components among atoms and samples."""
@@ -189,7 +194,7 @@ class RunnerAdaptor:
     def calculate_energy_errors(self, obj):
         """This method returns a list of absolute-errors of the total energy for samples (normalized to the number of atoms)."""
         assert isinstance(obj, RunnerAdaptor), "Unexpected object type"
-        assert self.number_of_samples() == obj.number_of_samples(), "Unequal number of samples"
+        assert self.number_of_samples == obj.number_of_samples, "Unequal number of samples"
         return np.abs(self.get_energies()-obj.get_energies())
 
     def calculate_force_errors(self, obj, method="max", components=(0, 1, 2)):
