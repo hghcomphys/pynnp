@@ -201,6 +201,8 @@ class RunnerAdaptor:
         (normalized to the number of atoms)."""
         assert isinstance(obj, RunnerAdaptor), "Unexpected object type"
         assert self.number_of_samples == obj.number_of_samples, "Unequal number of samples"
+        for i in range(self.number_of_samples):
+            assert self.dataset.samples[i].number_of_atoms == obj.dataset.samples[i].number_of_atoms, "Unequal number of atoms"
         return np.abs(self.get_energies()-obj.get_energies())
 
     def calculate_force_errors(self, obj, method="max", components=(0, 1, 2)):
