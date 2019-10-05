@@ -138,17 +138,20 @@ class RunnerAdaptor:
         return self.get_energies()
 
     def get_range_of_energy(self):
-        """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
+        """This method returns the difference between max and min of the total energy among
+        samples nomalzied to the number of atoms."""
         energies = self.get_energies()
         return np.max(energies)-np.min(energies)
 
     @property
     def range_of_energy(self):
-        """This method returns the difference between max and min of the total energy among samples nomalzied to the number of atoms."""
+        """This method returns the difference between max and min of the total energy among
+        samples nomalzied to the number of atoms."""
         return self.get_range_of_energy()
 
     def get_forces(self, list_of_indices=None, components=(0, 1, 2)):
-        """This method returns a list of forces for a given list of indices (zero-based) of samples (default is all samples)."""
+        """This method returns a list of forces for a given list of indices (zero-based)
+        of samples (default is all samples)."""
         # check input list of indices
         if list_of_indices is None:
             samples = self.dataset.samples
@@ -175,13 +178,15 @@ class RunnerAdaptor:
         return self.get_forces()
 
     def get_range_of_force(self, components=(0, 1, 2)):
-        """This method returns the difference between max and min of the force components among atoms and samples."""
+        """This method returns the difference between max and min of the force components among
+        atoms and samples."""
         forces = self.get_forces(components)
         return np.max(forces) - np.min(forces)
 
     @property
     def range_of_force(self):
-        """This method returns the difference between max and min of the force components among atoms and samples."""
+        """This method returns the difference between max and min of the force components among
+        atoms and samples."""
         return self.get_range_of_force()
 
     def get_number_of_samples(self):
@@ -192,24 +197,27 @@ class RunnerAdaptor:
         return self.get_number_of_samples()
 
     def calculate_energy_errors(self, obj):
-        """This method returns a list of absolute-errors of the total energy for samples (normalized to the number of atoms)."""
+        """This method returns a list of absolute-errors of the total energy for samples
+        (normalized to the number of atoms)."""
         assert isinstance(obj, RunnerAdaptor), "Unexpected object type"
         assert self.number_of_samples == obj.number_of_samples, "Unequal number of samples"
         return np.abs(self.get_energies()-obj.get_energies())
 
     def calculate_force_errors(self, obj, method="max", components=(0, 1, 2)):
         """This method returns a list of absolute-max-errors of the atomic forces for samples."""
-        assert isinstance(obj, RunnerAdaptor), "Unexpected object type"
-        assert self.get_number_of_samples() == obj.get_number_of_samples(), "Unequal number of samples"
+        assert isinstance(obj, RunnerAdaptor), "Unexpected input object type"
+        assert self.number_of_samples == obj.number_of_samples, "Unequal number of samples"
         force_errors = []
         for i in range(self.number_of_samples):
-            # aplly method for error calculation
+            # check number of atoms in each corresponding sample
+            assert self.dataset.samples[i].number_of_atoms == obj.dataset.samples[i].number_of_atoms, "Unequal number of atoms"
+            # apply method for error calculation
             if method.lower() == "max":
                 error = np.max(np.abs(self.get_forces(i,components) - obj.get_forces(i, components)))
             elif method.lower() == "rmse":
                 error = np.sqrt(np.mean((self.get_forces(i, components) - obj.get_forces(i, components))**2))
             else:
-                raise AssertionError("Unknown given method for force error calculation")
+                raise AssertionError("Unknown input method for force-error calculation")
             # add calculated error for each sample
             force_errors.append(error)
         # return a list of errors
