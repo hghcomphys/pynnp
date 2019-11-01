@@ -139,7 +139,7 @@ class RunnerAdaptor:
 
     def get_range_of_energy(self):
         """This method returns the difference between max and min of the total energy among
-        samples nomalzied to the number of atoms."""
+        samples normalized to the number of atoms."""
         energies = self.get_energies()
         return np.max(energies)-np.min(energies)
 
@@ -224,3 +224,23 @@ class RunnerAdaptor:
             force_errors.append(error)
         # return a list of errors
         return np.array(force_errors)
+
+    def find(self, obj, energy_error_threshold=None, force_error_threshold=None, method="max", components=(0, 1, 2)):
+        """This method returns a list of sample indices (zero-based) with energy/force error
+        beyond the specified thresholds."""
+        # energy
+        energy_index = []
+        if energy_error_threshold is not None:
+            energy_errors = self.calculate_energy_errors(obj)
+            for i in range(0, self.number_of_samples):
+                if energy_errors[i] >= energy_error_threshold:
+                    energy_index.append(i)
+        # force
+        force_index = []
+        if force_error_threshold is not None:
+            force_errors = self.calculate_force_errors(obj, method, components)
+            for i in range(0, self.number_of_samples):
+                if force_errors[i] >= force_error_threshold:
+                    force_index.append(i)
+        # return an list of unique indices.
+        return list(set(energy_index+force_index))
