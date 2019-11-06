@@ -244,3 +244,21 @@ class RunnerAdaptor:
                     force_index.append(i)
         # return an list of unique indices.
         return list(set(energy_index+force_index))
+
+    def calculate_min_distances(self):
+        """This method returns a list of absolute-errors of the total energy for samples
+        (normalized to the number of atoms)."""
+        list_of_min_distances = []
+        for sample in self.dataset.samples:
+            r2min = 1E6
+            for i in range(sample.number_of_atoms):
+                atom_i = sample.atomic[i]
+                for j in range(sample.number_of_atoms):
+                    if i >= j:
+                        continue
+                    atom_j = sample.atomic[j]
+                    r2 = sample.distance2(atom_i, atom_j)
+                    if r2 < r2min:
+                        r2min = r2
+            list_of_min_distances.append(np.sqrt(r2min))
+        return np.array(list_of_min_distances)
