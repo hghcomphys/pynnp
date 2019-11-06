@@ -7,8 +7,9 @@ ANGSTROM_TO_BOHR = 1.8897261328
 EV_TO_HARTREE = 0.0367493254
 KCALMOL_TO_HARTREE = 0.001593602
 
-HARTREE_TO_EV = 1./EV_TO_HARTREE
+HARTREE_TO_EV = 1.0/EV_TO_HARTREE
 HARTREE_TO_MEV = HARTREE_TO_EV*1000.0
+BOHR_TO_ANGSTROM = 1.0/ANGSTROM_TO_BOHR
 
 # ----------------------------------------------------------------------------
 # Define utility constants, functions, and classes
