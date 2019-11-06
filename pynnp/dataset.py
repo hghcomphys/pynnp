@@ -1,5 +1,7 @@
 """data set"""
 
+from math import sqrt
+
 # ----------------------------------------------------------------------------
 # Setup class for AtomicData
 # ----------------------------------------------------------------------------
@@ -87,6 +89,40 @@ class Sample:
     def get_number_of_atoms_for_symbol(self, symbol):
         """This methods return number of atoms with a specified symbol (element type)."""
         return len(self.get_atoms_for_symbol(symbol))
+
+    def distance2(self, atom_i, atom_j):
+        """This method returns square of the distance between two given atoms."""
+        # set distances in each direction
+        # TODO: optimize performance
+        dx = atom_i.position[0] - atom_j.position[0]
+        dy = atom_i.position[1] - atom_j.position[1]
+        dz = atom_i.position[2] - atom_j.position[2]
+        # get cell sizes
+        # TODO: extend to non-orthogonal cell
+        cell = self.collective.cell
+        lx, ly, lz = cell[0], cell[4], cell[8]
+        # apply-PBC
+        # x-direction
+        if dx > lx*0.5:
+            dx -= lx
+        elif dx < -lx*0.5:
+            dx += lx
+        # y-direction
+        if dy > ly*0.5:
+            dy -= ly
+        elif dy < -ly*0.5:
+            dy += ly
+        # z-direction
+        if dz > lz*0.5:
+            dz -= lz
+        elif dz < -lz*0.5:
+            dz += lz
+        # return square of distance
+        return dx*dx + dy*dy + dz*dz
+
+    def distance(self, atom_i, atom_j):
+        """This method returns the distance between two given atoms."""
+        return sqrt(self.distance2(atom_i, atom_j))
 
 # ----------------------------------------------------------------------------
 # Setup classes for DataSet
