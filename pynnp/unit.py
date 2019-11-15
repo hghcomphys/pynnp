@@ -27,7 +27,7 @@ class UnitConversion:
         """A method that returns the inverse of UnitConversion object."""
         return UnitConversion(1.0 / self.energy, 1.0 / self.length, 1. / self.charge)
 
-    @property
-    def inverse(self):
-        """A method that returns the inverse of UnitConversion object."""
-        return self.inverse()
+    # @property
+    # def inverse(self):
+    #     """A method that returns the inverse of UnitConversion object."""
+    #     return self.get_inverse()
