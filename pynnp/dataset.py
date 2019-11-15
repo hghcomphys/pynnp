@@ -55,7 +55,7 @@ class Sample:
         return self.get_total_energy()
 
     def sum_atomic_energy(self):
-        """This method calculates total energy by summing up the atomic energy."""
+        """This method calculates total energy by adding up the atomic energies."""
         tot = 0.0
         for atom in self.atomic:
             tot += atom.energy
@@ -72,7 +72,7 @@ class Sample:
         return self.get_total_energy()
 
     def sum_atomic_charge(self):
-        """This method calculates total charge by summing up atomic charge."""
+        """This method calculates total charge by adding up atomic charges."""
         tot = 0.0
         for atom in self.atomic:
             tot += atom.charge
