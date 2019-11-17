@@ -127,14 +127,20 @@ class RunnerAdaptor:
         self.dataset.samples = [self.dataset.samples[index] for index in range(n_samples) if index not in list(list_of_indices)]
         return self
 
-    def get_energies(self):
-        """This methods return a list of total energies of samples normalized to number of atoms."""
-        energies = [sample.collective.total_energy / sample.number_of_atoms for sample in self.dataset.samples]
+    def get_energies(self, list_of_indices=None):
+        """This method returns a list of total energies of samples normalized to the number of atoms."""
+        if list_of_indices is None:
+            samples = self.dataset.samples
+        elif isinstance(list_of_indices, int):
+            samples = [self.dataset.samples[list_of_indices]]
+        else:
+            samples = [self.dataset.samples[index] for index in list(list_of_indices)]
+        energies = [sample.collective.total_energy/sample.number_of_atoms for sample in samples]
         return np.array(energies)
 
     @property
     def energies(self):
-        """This methods return a list of total energies of samples normalized to number of atoms."""
+        """This method return a list of total energies of samples normalized to number of atoms."""
         return self.get_energies()
 
     def get_range_of_energy(self):
