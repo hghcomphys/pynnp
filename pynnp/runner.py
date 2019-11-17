@@ -186,7 +186,7 @@ class RunnerAdaptor:
     def get_range_of_force(self, components=(0, 1, 2)):
         """This method returns the difference between max and min of the force components among
         atoms and samples."""
-        forces = self.get_forces(components)
+        forces = self.get_forces(components=components)
         return np.max(forces) - np.min(forces)
 
     @property
