@@ -287,5 +287,24 @@ class RunnerAdaptor:
                 for atom in sample.atomic:
                     out_file.write("%8s " % atom.symbol)
                     out_file.write("%15.10f %15.10f %15.10f\n" % tuple([pos*uc.length for pos in atom.position]))
-        # return object
+        # return the object
+        return self
+
+    def remove_atomic_energy(self, atomic_energy):
+        """This method sbutracts atomic energy from the total energy."""
+        assert isinstance(atomic_energy, dict), "Expected type of dict for input argument energies"
+        for i in range(self.number_of_samples):
+            # get sample
+            sample = self.dataset.samples[i]
+            # initialize to zero
+            element_number = {}
+            for elem in atomic_energy.keys():
+                element_number[elem] = 0
+            # find number of atoms for each element
+            for atom in sample.atomic:
+                element_number[atom.symbol] += 1
+            # subtract the sum of corresponding energy for each element type from the total energy
+            for elem in atomic_energy.keys():
+                self.dataset.samples[i].collective.total_energy -= element_number[elem]*atomic_energy[elem]
+        # return the object
         return self
