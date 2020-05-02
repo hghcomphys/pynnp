@@ -89,7 +89,7 @@ class RuNNerAdaptorForVASP(RunnerAdaptor):
                 # Assuming it is the end of the POSCAR
                 break
             # set collective data
-            sample.collective = CollectiveData(cell, sample.total_energy, sample.total_charge)
+            sample.collective = CollectiveData(cell, 0, 0)
             # add sample to DataSet (list of samples)
             self.dataset.append(sample)
         # return object
