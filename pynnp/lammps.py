@@ -61,6 +61,33 @@ class RuNNerAdaptorForLAMMPS(RunnerAdaptor):
         # return object
         return self
 
-    def write_lammps(self, filename, uc=UnitConversion()):
+    def write_lammps(self, filename="nnp.data", symbol_dict=None, uc=UnitConversion()):
         """A method that writes lammps input data."""
-        pass
+        """This method writes data set into POSCAR file format (VASP package)."""
+        with open(filename, 'w') as out_file:
+            # loop over all samples in the data set
+            for n_frame, sample in enumerate(self.dataset.samples):
+                # frame
+                out_file.write(f"ITEM: TIMESTEP\n{n_frame}\n")
+                # number of atoms
+                out_file.write(f"ITEM: NUMBER OF ATOMS\n{sample.number_of_atoms}\n")
+                # cell
+                out_file.write(f"ITEM: BOX BOUNDS pp pp pp\n")
+                for i in [0, 4, 8]:
+                    out_file.write(f"{0} {sample.collective.cell[i]*uc.length}\n")
+                # atomic data
+                out_file.write(f"ITEM: ATOMS id x y z type q c_e0 fx fy fz\n")
+                for aid, atom in enumerate(sample.atomic):
+                    pos = [pos*uc.length for pos in atom.position]
+                    frc = [frc*uc.force for frc in atom.force]
+                    out_file.write(f"{aid+1} {pos[0]} {pos[1]} {pos[2]} "
+                                   f"{symbol_dict[atom.symbol]} "
+                                   f"{atom.charge*uc.charge} {atom.energy*uc.energy} "
+                                   f"{frc[0]} {frc[1]} {frc[2]}\n")
+                    # out_file.write(f"{aid+1} {aid+1} "
+                    #                f"{symbol_dict[atom.symbol]} "
+                    #                f"{atom.charge * uc.charge} "
+                    #                f"{pos[0]} {pos[1]} {pos[2]} "
+                    #                f"0 0 0\n")
+        # return object
+        return self
