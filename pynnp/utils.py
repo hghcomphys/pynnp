@@ -1,4 +1,4 @@
-"""Util"""
+"""Utils"""
 
 from datetime import datetime
 

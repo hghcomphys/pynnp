@@ -1,4 +1,4 @@
-# nnp package init
+"""PyNNP"""
 
 from .dataset import *
 from .lammps import *

@@ -59,6 +59,7 @@ class Sample:
         tot = 0.0
         for atom in self.atomic:
             tot += atom.energy
+            print (atom.energy)
         return tot
 
     def get_total_charge(self):
