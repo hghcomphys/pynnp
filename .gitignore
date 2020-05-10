@@ -2,6 +2,6 @@
 *.data
 *.data.*
 __pycache__
-*.ipynb
+#*.ipynb
 POSCAR*
 OUTCAR*
