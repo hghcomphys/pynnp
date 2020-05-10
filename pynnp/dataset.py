@@ -1,6 +1,6 @@
-"""data set"""
-
 from math import sqrt
+from collections import defaultdict
+
 
 # ----------------------------------------------------------------------------
 # Setup class for AtomicData
@@ -8,13 +8,14 @@ from math import sqrt
 class AtomicData:
     """A class that holds atomic data such as positions, forces, total_energy, charges, etc."""
 
-    def __init__(self, atomid=0, position=(0.0, 0.0, 0.0), symbol='X', charge=0.0, energy=0.0, force=(0.0, 0.0, 0.0)):
-        self.atomid = atomid
-        self.position= position
+    def __init__(self, atom_id=0, position=(0.0, 0.0, 0.0), symbol='X', charge=0.0, energy=0.0, force=(0.0, 0.0, 0.0)):
+        self.atom_id = atom_id
+        self.position = position
         self.symbol = symbol # element type
         self.charge = charge
         self.energy = energy
         self.force = force
+
 
 # ----------------------------------------------------------------------------
 # Setup classes for CollectiveData
@@ -23,14 +24,15 @@ class CollectiveData:
     """A class that holds collective quantities of simulated system such as total energy or charge."""
 
     def __init__(self, cell=(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0), total_energy=0.0, total_charge=0.0):
-            self.cell = cell
-            self.total_energy = total_energy
-            self.total_charge = total_charge
+        self.cell = cell
+        self.total_energy = total_energy
+        self.total_charge = total_charge
+
 
 # ----------------------------------------------------------------------------
 # Setup classes for Sample
 # ----------------------------------------------------------------------------
-class Sample:
+class SampleData:
     """ A class that holds a list of atomic data and also collective data for a single sample."""
 
     def __init__(self):
@@ -125,6 +127,13 @@ class Sample:
         """This method returns the distance between two given atoms."""
         return sqrt(self.distance2(atom_i, atom_j))
 
+    def get_atom_types_and_numbers(self):
+        """This method returns a list of atom types present in the structure."""
+        atom_types_numbers = defaultdict(int)
+        for atom in self.atomic:
+            atom_types_numbers[atom.symbol] += 1
+        return atom_types_numbers
+
 # ----------------------------------------------------------------------------
 # Setup classes for DataSet
 # ----------------------------------------------------------------------------
@@ -136,7 +145,7 @@ class DataSet:
 
     def append(self, new_sample):
         """Append a sample to the list of samples."""
-        assert isinstance(new_sample, Sample), "Unexpected sample type"
+        assert isinstance(new_sample, SampleData), "Unexpected sample type"
         self.samples.append(new_sample)
         return self
 
@@ -147,3 +156,14 @@ class DataSet:
     def number_of_samples(self):
         return self.get_number_of_samples()
 
+    def get_atom_types_numbers(self):
+        """This method returns a list of atom types present in the dataset."""
+        atom_types_numbers = defaultdict(float)
+        # add number of atom types for each sample
+        for sample in self.samples:
+            for atom_type, atom_number in sample.get_atom_types_and_numbers().items():
+                atom_types_numbers[atom_type] += atom_number
+        # normalize to the number of samples
+        for key in atom_types_numbers:
+            atom_types_numbers[key] /= self.number_of_samples
+        return atom_types_numbers
