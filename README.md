@@ -1,5 +1,5 @@
 # Python-NNP
-Python-NNP (`pynnp`) is a set of basic python modules for easier neural network potential construction and validation using 
+Python-NNP (`pynnp`) is a set of basic python modules for easier neural network potential development and validation using 
 [RuNNer](http://www.uni-goettingen.de/de/560580.html) and
 [N2P2](https://github.com/CompPhysVienna/n2p2) codes.
 
