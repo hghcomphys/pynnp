@@ -1,9 +1,8 @@
-"""LAMMPS"""
-
 from .runner import RunnerAdaptor
-from .dataset import Sample
+from .dataset import SampleData
 from .dataset import AtomicData, CollectiveData
 from .unit import UnitConversion
+
 
 # ----------------------------------------------------------------------------
 # Setup class for RuNNer adaptor to LAMMPS
@@ -20,7 +19,7 @@ class RuNNerAdaptorForLAMMPS(RunnerAdaptor):
             # loop over lines in file
             for line in in_file:
                 # create a instance of sample data
-                sample = Sample()
+                sample = SampleData()
                 # number of steps
                 line = next(in_file)
                 steps = int(line.split()[0])

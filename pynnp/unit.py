@@ -1,5 +1,3 @@
-"""Unit"""
-
 # ----------------------------------------------------------------------------
 # Physical conversion constant
 # ----------------------------------------------------------------------------
@@ -10,6 +8,7 @@ KCALMOL_TO_HARTREE = 0.001593602
 HARTREE_TO_EV = 1.0/EV_TO_HARTREE
 HARTREE_TO_MEV = HARTREE_TO_EV*1000.0
 BOHR_TO_ANGSTROM = 1.0/ANGSTROM_TO_BOHR
+
 
 # ----------------------------------------------------------------------------
 # Define utility constants, functions, and classes
@@ -23,9 +22,9 @@ class UnitConversion:
         self.charge = charge_conversion
         self.force = energy_conversion / length_conversion
 
-    def inverse(self):
+    def get_inverse(self):
         """A method that returns the inverse of UnitConversion object."""
-        return UnitConversion(1.0 / self.energy, 1.0 / self.length, 1. / self.charge)
+        return UnitConversion(1.0/self.energy, 1.0/self.length, 1./self.charge)
 
     # @property
     # def inverse(self):

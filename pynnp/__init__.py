@@ -1,5 +1,3 @@
-"""PyNNP"""
-
 from .dataset import *
 from .lammps import *
 from .runner import *

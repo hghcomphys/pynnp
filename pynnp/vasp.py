@@ -1,8 +1,7 @@
-"""VASP"""
-
 from .runner import RunnerAdaptor
 from .unit import UnitConversion
-from .dataset import Sample, AtomicData, CollectiveData
+from .dataset import SampleData, AtomicData, CollectiveData
+
 
 # ----------------------------------------------------------------------------
 # Setup class for RuNNer adaptor to VASP
@@ -45,12 +44,12 @@ class RuNNerAdaptorForVASP(RunnerAdaptor):
     def read_poscar(self, symbol_list=None, filename='POSCAR', uc=UnitConversion()):
         """This method reads POSCAR file format (VASP package)."""
         # create a instance of sample data
-        sample = Sample()
+        sample = SampleData()
         with open(str(filename), 'r') as in_file:
             # loop over lines in file
             for line in in_file:
                 # create a instance of sample data
-                sample = Sample()
+                sample = SampleData()
                 # read scaling factor
                 line = next(in_file).rstrip("/n").split()
                 scaling_factor = float(line[0])
