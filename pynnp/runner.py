@@ -323,6 +323,6 @@ class RunnerAdaptor:
                   f"average number of atoms        : {self.get_average_number_of_atoms():<4.0f}\n"\
                   f"atom types and average numbers : " \
                   f"{[(key, '%3.0f'%value) for key, value in self.dataset.get_atom_types_numbers().items()]}\n"\
-                  f"range of energies              : {self.range_of_energy:10.8f}\n"\
+                  f"range of energies per atom     : {self.range_of_energy:10.8f}\n"\
                   f"range of forces                : {self.range_of_force:10.8f}"
         return out_str
