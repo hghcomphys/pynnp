@@ -1,16 +1,18 @@
 # Python-NNP
-Python-NNP (`pynnp`) is a set of basic python modules for easier neural network potential construction and validation using [RuNNer](http://www.uni-goettingen.de/de/560580.html) code.
+Python-NNP (`pynnp`) is a set of basic python modules for easier neural network potential construction and validation using 
+[RuNNer](http://www.uni-goettingen.de/de/560580.html) and
+[N2P2](https://github.com/CompPhysVienna/n2p2) codes.
 
-See `examples/pynnp_demo` for more examples.
+Please see `examples/pynnp_demo` for more details.
 
 ## Current status:
 - [x] read and write RuNNer structure file format
 - [x] structure selection and basic modification
-- [x] provides methods to explore structures such as range of energies, forces, atom types, etc.
-- [x] [LAMMPS](https://lammps.sandia.gov/) dump files conversion to Runner file format and vice versa
-- [x] [VASP](https://www.vasp.at/) output files conversion to Runner file format and vice versa
-- [x] flexible unit conversion when read/write data files
-- [x] tools for applying multi-NNP method
+- [x] providing methods to explore structures such as range of energies, forces, atom types, etc
+- [x] [LAMMPS](https://lammps.sandia.gov/) dump files conversion to RuNNer file format and vice versa
+- [x] [VASP](https://www.vasp.at/) output files conversion to RuNNer file format and vice versa
+- [x] flexible unit conversion 
+- [x] methods for applying multi-NNP reconstruction
 
 
 ## Dependencies:
