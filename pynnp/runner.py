@@ -1,10 +1,9 @@
-"""RuNNer"""
-
-from .dataset import DataSet, Sample, AtomicData, CollectiveData
+from .dataset import DataSet, SampleData, AtomicData, CollectiveData
 from .unit import UnitConversion
 from .utils import get_time_and_date
 import random
 import numpy as np
+
 
 # ----------------------------------------------------------------------------
 # Setup class for RuNNer adaptor
@@ -52,7 +51,7 @@ class RunnerAdaptor:
             # read a frame
             if "begin" in line.rstrip("/n").split()[0]:
                 # initialize sample data
-                sample = Sample()
+                sample = SampleData()
                 cell = []
                 atomid = 0
                 total_energy = 0.0
@@ -291,7 +290,7 @@ class RunnerAdaptor:
         return self
 
     def remove_atomic_energy(self, atomic_energy):
-        """This method sbutracts atomic energy from the total energy."""
+        """This method subtracts atomic energy from the total energy."""
         assert isinstance(atomic_energy, dict), "Expected type of dict for input argument energies"
         for i in range(self.number_of_samples):
             # get sample
@@ -308,3 +307,22 @@ class RunnerAdaptor:
                 self.dataset.samples[i].collective.total_energy -= element_number[elem]*atomic_energy[elem]
         # return the object
         return self
+
+    def get_average_number_of_atoms(self):
+        """This method returns average number of atoms among all structures."""
+        n_atoms = 0.0
+        for sample in self.dataset.samples:
+            n_atoms += sample.number_of_atoms
+        return n_atoms/self.number_of_samples
+
+    def __str__(self):
+        """This method returns a string representation of the RunnerAdaptor class."""
+        out_str = f"RunnerAdaptor\n"\
+                  f"-------------\n"\
+                  f"number of samples              : {self.number_of_samples:}\n"\
+                  f"average number of atoms        : {self.get_average_number_of_atoms():<4.0f}\n"\
+                  f"atom types and average numbers : " \
+                  f"{[(key, '%3.0f'%value) for key, value in self.dataset.get_atom_types_numbers().items()]}\n"\
+                  f"range of energies              : {self.range_of_energy:10.8f}\n"\
+                  f"range of forces                : {self.range_of_force:10.8f}"
+        return out_str
